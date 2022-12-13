@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace WindowsFormsApp4
 {
@@ -28,24 +31,71 @@ namespace WindowsFormsApp4
         List<string> NUMER_LICZNIKA = new List<string>();
         List<string> PUNKT_POBORU = new List<string>();
         List<string> SKLADNIK = new List<string>();
-
         private List<string> fullFileName;
+        private List<string> fullFileName2;
         int czynnik = 0;
         public Excelator()
         {
             InitializeComponent();
         }
+        static void ConvertExcelToCsv(string excelFilePath, string csvOutputFile, int worksheetNumber = 1)
+        {
+            if (!File.Exists(excelFilePath)) throw new FileNotFoundException(excelFilePath);
+            if (File.Exists(csvOutputFile)) throw new ArgumentException("File exists: " + csvOutputFile);
 
+            // connection string
+            var cnnStr = String.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=\"Excel 8.0;IMEX=1;HDR=NO\"", excelFilePath);
+            var cnn = new OleDbConnection(cnnStr);
+
+            // get schema, then data
+            var dt = new DataTable();
+            try
+            {
+                cnn.Open();
+                var schemaTable = cnn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                if (schemaTable.Rows.Count < worksheetNumber) throw new ArgumentException("The worksheet number provided cannot be found in the spreadsheet");
+                string worksheet = schemaTable.Rows[worksheetNumber - 1]["table_name"].ToString().Replace("'", "");
+                string sql = String.Format("select * from [{0}]", worksheet);
+                var da = new OleDbDataAdapter(sql, cnn);
+                da.Fill(dt);
+            }
+            catch (Exception e)
+            {
+                // ???
+                throw e;
+            }
+            finally
+            {
+                // free resources
+                cnn.Close();
+            }
+
+            // write out CSV data
+            using (var wtr = new StreamWriter(csvOutputFile,true,Encoding.GetEncoding("UTF-8")))
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    bool firstLine = true;
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        if (!firstLine) { wtr.Write(";"); } else { firstLine = false; }
+                        var data = row[col.ColumnName].ToString().Replace("\"", "\"\"");
+                        wtr.Write(String.Format("\"{0}\"", data));
+                    }
+                    wtr.WriteLine();
+                }
+            }
+        }
         void odczyt()
         {
-            
-            int liczbaplikow = 0;
+
+
             string check = "DATA_ODCZYTU";
 
             foreach (string fileName in fullFileName)
             {
                 listBox1.Items.Add(fileName.Substring(fileName.LastIndexOf(@"\") + 1));
-                liczbaplikow++;
+
                 using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-2")))
                 {
                     while (!reader.EndOfStream)
@@ -55,7 +105,8 @@ namespace WindowsFormsApp4
                         var values = line.Split(';');
                         bool result = check.Equals(values[0]);
                         // wpisanie danych do list
-                        if (result && czynnik == 0) // sprawdza czy wiersz z nazwami tabeli został już wczytany, jeżeli czynnik = 0 to znaczy, że pętla wykonuje się pierwszy raz 
+                        
+                        void przypis()
                         {
                             DATA_ODCZYTU.Add(values[0]);
                             ZUZYCIE_BIEZACE.Add(values[1]);
@@ -69,6 +120,10 @@ namespace WindowsFormsApp4
                             NUMER_LICZNIKA.Add(values[9]);
                             PUNKT_POBORU.Add(values[10]);
                             SKLADNIK.Add(values[11]);
+                        }
+                        if (result && czynnik == 0) // sprawdza czy wiersz z nazwami tabeli został już wczytany, jeżeli czynnik = 0 to znaczy, że pętla wykonuje się pierwszy raz 
+                        {
+                            przypis();
                             czynnik = 1;
                         }
                         else if (result && czynnik == 1) // gdy ponownie pojawi się nazwa kolumny a czynnik jest już 1, pominie cały wiersz excela
@@ -77,19 +132,7 @@ namespace WindowsFormsApp4
                         }
                         else // w każdym innym przypadku po prostu dodaje elementy do listy
                         {
-
-                            DATA_ODCZYTU.Add(values[0]);
-                            ZUZYCIE_BIEZACE.Add(values[1]);
-                            JEDNOSTKA.Add(values[2]);
-                            DATA_POPRZEDNIEGO_ODCZYTU.Add(values[3]);
-                            ODCZYT_BIEZACY.Add(values[4]);
-                            ODCZYT_POPRZEDNI.Add(values[5]);
-                            STREFA_EC.Add(values[6]);
-                            ADRES_PPE.Add(values[7]);
-                            TYP_ODCZYTU.Add(values[8]);
-                            NUMER_LICZNIKA.Add(values[9]);
-                            PUNKT_POBORU.Add(values[10]);
-                            SKLADNIK.Add(values[11]);
+                            przypis();
                         }
                     }
                 }
@@ -98,8 +141,8 @@ namespace WindowsFormsApp4
 
         void concat()
         {
-           
-            var dl_listy = DATA_ODCZYTU.Count;          
+
+            var dl_listy = DATA_ODCZYTU.Count;
             var box = textBox1.Text;
             string fullPath = ".\\" + box + ".csv";
 
@@ -137,9 +180,9 @@ namespace WindowsFormsApp4
             OpenFileDialog1.Filter = "csv Files|*.csv";
             OpenFileDialog1.Title = "Seclect a csv File";
             if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {              
+            {
                 fullFileName = new List<String>(OpenFileDialog1.FileNames);
-               
+
                 string errormessage = "Niepoprawna zawartość pliku";
                 string title = "Wybór";
                 try
@@ -187,24 +230,24 @@ namespace WindowsFormsApp4
                 button2.Visible = false;
                 MessageBox.Show(message, title);
             }
-                
-            
+
+
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
 
-           
+
 
             string errormessage = "Nie udało się połączyć plików";
             string errormessage2 = "Najpierw wybierz pliki do połączenia";
             string title = "Połączenie";
             string message = "Pomyślnie połączono";
-            
+
 
             try
             {
-                
+
                 if (listBox1.Items.Count == 0)
                 {
                     MessageBox.Show(errormessage2, title);
@@ -219,7 +262,7 @@ namespace WindowsFormsApp4
                     button3.Visible = false;
                     button2.Visible = false;
                 }
-                
+
             }
             catch (Exception)
             {
@@ -231,10 +274,7 @@ namespace WindowsFormsApp4
             cleaner();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -246,16 +286,100 @@ namespace WindowsFormsApp4
 
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            var box = textBox1.Text;
-            string fullPath = ".\\"+ box + ".csv";
-            MessageBox.Show(fullPath, "nic");
-        }
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            OpenFileDialog OpenFileDialog2 = new OpenFileDialog();
+            OpenFileDialog2.Multiselect = true;
+            OpenFileDialog2.Filter = "xlsx Files|*.xlsx| xls Files|*.xls|All files (*.*)|*.*";
+            OpenFileDialog2.Title = "Seclect a xlsx or xls File";
+            if (OpenFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                fullFileName2 = new List<String>(OpenFileDialog2.FileNames);
+                foreach (string fileName in fullFileName2)
+                {
+
+                    listBox2.Items.Add(fileName.Substring(fileName.LastIndexOf(@"\") + 1));
+
+                    string errormessage = "Niepoprawna zawartość pliku";
+                    string title = "Wybór";
+                    try
+                    {
+
+                        button5.Visible = true;
+                        button6.Visible = true;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(errormessage, title);
+                        listBox2.Items.Clear();
+                        cleaner();
+
+                    }
+                }
+
+            }
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string message = "Pomyślnie wyczyszczono";
+            string errormessage = "Lista jest pusta, nie wymaga czyszczenia";
+
+            string title = "Czyszczenie";
+            if (listBox2.Items.Count == 0)
+            {
+                cleaner();
+                MessageBox.Show(errormessage, title);
+            }
+            else
+            {
+                listBox2.Items.Clear();
+
+                button5.Visible = false;
+                button6.Visible = false;
+                MessageBox.Show(message, title);
+            }
+
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+
+            foreach (string fileName in fullFileName2)
+                {
+                
+                string kp = fileName.Remove(fileName.LastIndexOf(@"."));
+                var k1 = Path.Combine("C:\\Users\\admin\\Desktop\\2 — kopia\\", fileName);
+                var k2 = Path.Combine("C:\\Users\\admin\\Desktop\\2 — kopia\\", kp + ".csv");
+
+                // MessageBox.Show(k1, "");
+                // MessageBox.Show(k2, "");
+                ConvertExcelToCsv(k1, k2);
+            }
+           
         }
     }
 }

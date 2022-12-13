@@ -69,5 +69,15 @@ namespace WindowsFormsApp4 {
                 return ((System.Drawing.Point)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Point podobny do zasobu {X=157,Y=17}.
+        /// </summary>
+        public static System.Drawing.Point openFileDialog2_TrayLocation {
+            get {
+                object obj = ResourceManager.GetObject("openFileDialog2.TrayLocation", resourceCulture);
+                return ((System.Drawing.Point)(obj));
+            }
+        }
     }
 }
