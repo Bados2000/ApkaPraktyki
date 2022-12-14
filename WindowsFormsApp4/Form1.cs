@@ -34,6 +34,7 @@ namespace WindowsFormsApp4
         private List<string> fullFileName;
         private List<string> fullFileName2;
         int czynnik = 0;
+        int nowyczynnik = 0;
         public Excelator()
         {
             InitializeComponent();
@@ -71,7 +72,7 @@ namespace WindowsFormsApp4
             }
 
             // write out CSV data
-            using (var wtr = new StreamWriter(csvOutputFile,true,Encoding.GetEncoding("UTF-8")))
+            using (var wtr = new StreamWriter(csvOutputFile, true, Encoding.GetEncoding("UTF-8")))
             {
                 foreach (DataRow row in dt.Rows)
                 {
@@ -98,30 +99,63 @@ namespace WindowsFormsApp4
 
                 using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-2")))
                 {
+                    int z = 0;
                     while (!reader.EndOfStream)
                     {
 
                         var line = reader.ReadLine();
                         var values = line.Split(';');
-                        bool result = check.Equals(values[0]);
+                        ;
                         // wpisanie danych do list
+
                         
                         void przypis()
                         {
-                            DATA_ODCZYTU.Add(values[0]);
-                            ZUZYCIE_BIEZACE.Add(values[1]);
-                            JEDNOSTKA.Add(values[2]);
-                            DATA_POPRZEDNIEGO_ODCZYTU.Add(values[3]);
-                            ODCZYT_BIEZACY.Add(values[4]);
-                            ODCZYT_POPRZEDNI.Add(values[5]);
-                            STREFA_EC.Add(values[6]);
-                            ADRES_PPE.Add(values[7]);
-                            TYP_ODCZYTU.Add(values[8]);
-                            NUMER_LICZNIKA.Add(values[9]);
-                            PUNKT_POBORU.Add(values[10]);
-                            SKLADNIK.Add(values[11]);
+                            DATA_ODCZYTU.Add(values[z]);
+                            ZUZYCIE_BIEZACE.Add(values[z + 1]);
+                            JEDNOSTKA.Add(values[z + 2]);
+                            DATA_POPRZEDNIEGO_ODCZYTU.Add(values[z + 3]);
+                            ODCZYT_BIEZACY.Add(values[z + 4]);
+                            ODCZYT_POPRZEDNI.Add(values[z + 5]);
+                            STREFA_EC.Add(values[z + 6]);
+                            ADRES_PPE.Add(values[z + 7]);
+                            TYP_ODCZYTU.Add(values[z + 8]);
+                            NUMER_LICZNIKA.Add(values[z + 9]);
+                            PUNKT_POBORU.Add(values[z + 10]);
+                            SKLADNIK.Add(values[z + 11]);
                         }
-                        if (result && czynnik == 0) // sprawdza czy wiersz z nazwami tabeli został już wczytany, jeżeli czynnik = 0 to znaczy, że pętla wykonuje się pierwszy raz 
+
+                       
+                        bool result;// = check.Equals(values[0]);
+                        //   xer = values.Length;
+                        int i = 0;
+                        do
+                        {
+                            if (check.Equals(values[i]))
+                            {
+                                result = true;
+                                z = i;
+                            }
+                            else
+                            {
+                                result = false;
+                            }
+                            //result = check.Equals(values[i]);
+                            i++;
+
+                        } while (i < values.Length && result == false);
+
+                        bool b1 = false;
+                        for (int j = z; j < z+12; j++)
+                        {
+                            if (string.IsNullOrEmpty(values[j]) == true)
+                            {
+                                b1 = true;
+                            }
+
+                        }
+
+                        if (result == true && czynnik == 0) // sprawdza czy wiersz z nazwami tabeli został już wczytany, jeżeli czynnik = 0 to znaczy, że pętla wykonuje się pierwszy raz 
                         {
                             przypis();
                             czynnik = 1;
@@ -130,6 +164,10 @@ namespace WindowsFormsApp4
                         {
 
                         }
+                        else if (b1 == true)
+                        {
+
+                        } 
                         else // w każdym innym przypadku po prostu dodaje elementy do listy
                         {
                             przypis();
@@ -309,7 +347,8 @@ namespace WindowsFormsApp4
 
         private void button4_Click(object sender, EventArgs e)
         {
-
+             listBox2.Items.Clear();
+                       
             OpenFileDialog OpenFileDialog2 = new OpenFileDialog();
             OpenFileDialog2.Multiselect = true;
             OpenFileDialog2.Filter = "xlsx Files|*.xlsx| xls Files|*.xls|All files (*.*)|*.*";
@@ -367,19 +406,29 @@ namespace WindowsFormsApp4
         private void button6_Click(object sender, EventArgs e)
         {
 
-
-            foreach (string fileName in fullFileName2)
+            try
+            {
+                foreach (string fileName in fullFileName2)
                 {
-                
-                string kp = fileName.Remove(fileName.LastIndexOf(@"."));
-                var k1 = Path.Combine("C:\\Users\\admin\\Desktop\\2 — kopia\\", fileName);
-                var k2 = Path.Combine("C:\\Users\\admin\\Desktop\\2 — kopia\\", kp + ".csv");
 
-                // MessageBox.Show(k1, "");
-                // MessageBox.Show(k2, "");
-                ConvertExcelToCsv(k1, k2);
+                    string kp = fileName.Remove(fileName.LastIndexOf(@"."));
+                    var k2 = kp + ".csv";
+
+                    ConvertExcelToCsv(fileName, k2);
+                    listBox2.Items.Clear();
+                    button5.Visible = false;
+                    button6.Visible = false;
+                }
+                MessageBox.Show("Pomyślnie przekonwertowano");
             }
-           
+            catch ( Exception e2)
+            {
+                throw e2;
+            }
+            listBox2.Items.Clear();
+            button5.Visible = false;
+            button6.Visible = false;
+            
         }
     }
 }
