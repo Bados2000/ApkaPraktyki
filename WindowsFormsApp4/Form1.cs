@@ -24,8 +24,7 @@ namespace WindowsFormsApp4
        
         private List<string> fullFileName;
         private List<string> fullFileName2;
-        int czynnik = 0;
-        int nowyczynnik = 0;
+
         int rozmiar = 0;
         string check;
         string[] checker;
@@ -179,8 +178,7 @@ namespace WindowsFormsApp4
 
         void cleaner()
         {
-            Array.Clear(magazyn,0,magazyn.Length);
-            czynnik = 0;
+            Array.Clear(magazyn,0,magazyn.Length);           
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -246,43 +244,42 @@ namespace WindowsFormsApp4
         }
 
         private void button3_Click(object sender, EventArgs e)
-        {
-
-
-
-            string errormessage = "Nie udało się połączyć plików";
-            string errormessage2 = "Najpierw wybierz pliki do połączenia";
+        {      
             string title = "Połączenie";
-            string message = "Pomyślnie połączono";
-
-
+   
             try
             {
 
-            if (listBox1.Items.Count == 0)
-            {
-                MessageBox.Show(errormessage2, title);
-            }
-            else
-            {
-                concat();
-                MessageBox.Show(message, title);
-                textBox1.Clear();
-                label1.Visible = false;
-                textBox1.Visible = false;
-                button3.Visible = false;
-                button2.Visible = false;
-            }
+                if (listBox1.Items.Count == 0)
+                {
+                    MessageBox.Show("Najpierw wybierz pliki do połączenia", title);
+                }
+                else if (string.IsNullOrEmpty(textBox2.Text))
+                {
+                    MessageBox.Show("Najpierw wklej nazwy kolumn", title);
+                }
+                else
+                {
+                    concat();
+                    MessageBox.Show("Pomyślnie połączono", title);
+                    label1.Visible = false;
+                    textBox1.Visible = false;
+                    button3.Visible = false;
+                    button2.Visible = false;
+                    textBox1.Clear();
+                    textBox2.Clear();
+                    listBox1.Items.Clear();
+                    cleaner();
+                }
 
             }
             catch (Exception)
             {
-                MessageBox.Show(errormessage, title);
+                MessageBox.Show("Coś poszło nie tak", title);
             }
 
 
-            listBox1.Items.Clear();
-            cleaner();
+           
         }
 
 
@@ -405,6 +402,16 @@ namespace WindowsFormsApp4
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
         {
 
         }
