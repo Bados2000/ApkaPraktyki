@@ -14,6 +14,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
+using ExcelDataReader;
+
 
 namespace WindowsFormsApp4
 {
@@ -39,54 +41,54 @@ namespace WindowsFormsApp4
         {
             InitializeComponent();
         }
-        static void ConvertExcelToCsv(string excelFilePath, string csvOutputFile, int worksheetNumber = 1)
+        static bool ConvertExcelToCsv(string excelFilePath, string csvOutputFile, int worksheetNumber = 1)
         {
-            if (!File.Exists(excelFilePath)) throw new FileNotFoundException(excelFilePath);
-            if (File.Exists(csvOutputFile)) throw new ArgumentException("File exists: " + csvOutputFile);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            // connection string
-            var cnnStr = String.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=\"Excel 8.0;IMEX=1;HDR=NO\"", excelFilePath);
-            var cnn = new OleDbConnection(cnnStr);
-
-            // get schema, then data
-            var dt = new DataTable();
-            try
+            using (var stream = new FileStream(excelFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                cnn.Open();
-                var schemaTable = cnn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                if (schemaTable.Rows.Count < worksheetNumber) throw new ArgumentException("The worksheet number provided cannot be found in the spreadsheet");
-                string worksheet = schemaTable.Rows[worksheetNumber - 1]["table_name"].ToString().Replace("'", "");
-                string sql = String.Format("select * from [{0}]", worksheet);
-                var da = new OleDbDataAdapter(sql, cnn);
-                da.Fill(dt);
-            }
-            catch (Exception e)
-            {
-                // ???
-                throw e;
-            }
-            finally
-            {
-                // free resources
-                cnn.Close();
-            }
-
-            // write out CSV data
-            using (var wtr = new StreamWriter(csvOutputFile, true, Encoding.GetEncoding("UTF-8")))
-            {
-                foreach (DataRow row in dt.Rows)
+                IExcelDataReader reader = null;
+                if (excelFilePath.EndsWith(".xls"))
                 {
-                    bool firstLine = true;
-                    foreach (DataColumn col in dt.Columns)
-                    {
-                        if (!firstLine) { wtr.Write(";"); } else { firstLine = false; }
-                        var data = row[col.ColumnName].ToString().Replace("\"", "\"\"");
-                        wtr.Write(String.Format("\"{0}\"", data));
-                    }
-                    wtr.WriteLine();
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
                 }
+                else if (excelFilePath.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+
+                if (reader == null)
+                    return false;
+
+                var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = false
+                    }
+                });
+
+                var csvContent = string.Empty;
+                int row_no = 0;
+                while (row_no < ds.Tables[0].Rows.Count)
+                {
+                    var arr = new List<string>();
+                    for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
+                    {
+                        arr.Add(ds.Tables[0].Rows[row_no][i].ToString());
+                    }
+                    row_no++;
+                    csvContent += string.Join(",", arr) + "\n";
+                }
+                StreamWriter csv = new StreamWriter(csvOutputFile, false);
+                csv.Write(csvContent);
+                csv.Close();
+                return true;
             }
+        
         }
+    
+
         void odczyt()
         {
 
