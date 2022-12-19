@@ -21,22 +21,16 @@ namespace WindowsFormsApp4
 {
     public partial class Excelator : Form
     {
-        List<string> DATA_ODCZYTU = new List<string>();
-        List<string> ZUZYCIE_BIEZACE = new List<string>();
-        List<string> JEDNOSTKA = new List<string>();
-        List<string> DATA_POPRZEDNIEGO_ODCZYTU = new List<string>();
-        List<string> ODCZYT_BIEZACY = new List<string>();
-        List<string> ODCZYT_POPRZEDNI = new List<string>();
-        List<string> STREFA_EC = new List<string>();
-        List<string> ADRES_PPE = new List<string>();
-        List<string> TYP_ODCZYTU = new List<string>();
-        List<string> NUMER_LICZNIKA = new List<string>();
-        List<string> PUNKT_POBORU = new List<string>();
-        List<string> SKLADNIK = new List<string>();
+       
         private List<string> fullFileName;
         private List<string> fullFileName2;
         int czynnik = 0;
         int nowyczynnik = 0;
+        int rozmiar = 0;
+        string check;
+        string[] checker;
+
+        string[,] magazyn = new string[20000, 20000];
         public Excelator()
         {
             InitializeComponent();
@@ -78,137 +72,114 @@ namespace WindowsFormsApp4
                         arr.Add(ds.Tables[0].Rows[row_no][i].ToString());
                     }
                     row_no++;
-                    csvContent += string.Join(",", arr) + "\n";
+                    csvContent += string.Join(";", arr) + "\n";
                 }
-                StreamWriter csv = new StreamWriter(csvOutputFile, false);
+                StreamWriter csv = new StreamWriter(csvOutputFile, false, Encoding.GetEncoding("ISO-8859-1"));
                 csv.Write(csvContent);
                 csv.Close();
                 return true;
             }
         
         }
-    
+
 
         void odczyt()
-        {
-
-
-            string check = "DATA_ODCZYTU";
+        {       
+            checker = textBox2.Text.Split('\t');
+            check = checker[0];
+            rozmiar = checker.Length;
+                                    
+            int c = 0;
 
             foreach (string fileName in fullFileName)
             {
+                int x = 0;
                 listBox1.Items.Add(fileName.Substring(fileName.LastIndexOf(@"\") + 1));
-
-                using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-2")))
+                bool warunek = false;
+                int starter = 0;
+                using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-1")))
                 {
-                    int z = 0;
                     while (!reader.EndOfStream)
                     {
 
                         var line = reader.ReadLine();
                         var values = line.Split(';');
-                        ;
-                        // wpisanie danych do list
-
-                        
-                        void przypis()
+                                        
+                        while (warunek == false && x < values.Length)
                         {
-                            DATA_ODCZYTU.Add(values[z]);
-                            ZUZYCIE_BIEZACE.Add(values[z + 1]);
-                            JEDNOSTKA.Add(values[z + 2]);
-                            DATA_POPRZEDNIEGO_ODCZYTU.Add(values[z + 3]);
-                            ODCZYT_BIEZACY.Add(values[z + 4]);
-                            ODCZYT_POPRZEDNI.Add(values[z + 5]);
-                            STREFA_EC.Add(values[z + 6]);
-                            ADRES_PPE.Add(values[z + 7]);
-                            TYP_ODCZYTU.Add(values[z + 8]);
-                            NUMER_LICZNIKA.Add(values[z + 9]);
-                            PUNKT_POBORU.Add(values[z + 10]);
-                            SKLADNIK.Add(values[z + 11]);
-                        }
-
-                       
-                        bool result;// = check.Equals(values[0]);
-                        //   xer = values.Length;
-                        int i = 0;
-                        do
-                        {
-                            if (check.Equals(values[i]))
+                            if (values[x] == check)
                             {
-                                result = true;
-                                z = i;
+                                warunek = true;
+                                starter = x;
                             }
                             else
                             {
-                                result = false;
+                                x++;
                             }
-                            //result = check.Equals(values[i]);
-                            i++;
-
-                        } while (i < values.Length && result == false);
-
-                        bool b1 = false;
-                        for (int j = z; j < z+12; j++)
+                        }
+                        int start = 0;
+                        if (warunek)
                         {
-                            if (string.IsNullOrEmpty(values[j]) == true)
+                            start = starter;
+                            for (int j = 0; j < checker.Length; ++j)
                             {
-                                b1 = true;
+                                
+                                magazyn[c, j] = values[start];
+                                start++;
                             }
-
                         }
-
-                        if (result == true && czynnik == 0) // sprawdza czy wiersz z nazwami tabeli został już wczytany, jeżeli czynnik = 0 to znaczy, że pętla wykonuje się pierwszy raz 
+                        else
                         {
-                            przypis();
-                            czynnik = 1;
+                            x = 0;
                         }
-                        else if (result && czynnik == 1) // gdy ponownie pojawi się nazwa kolumny a czynnik jest już 1, pominie cały wiersz excela
+                        if (warunek)
                         {
-
-                        }
-                        else if (b1 == true)
-                        {
-
-                        } 
-                        else // w każdym innym przypadku po prostu dodaje elementy do listy
-                        {
-                            przypis();
+                            c++;
                         }
                     }
+                        warunek = false;
                 }
             }
         }
-
         void concat()
         {
 
-            var dl_listy = DATA_ODCZYTU.Count;
+            
             var box = textBox1.Text;
             string fullPath = ".\\" + box + ".csv";
 
-            StreamWriter sw = new StreamWriter(fullPath, true, Encoding.GetEncoding("ISO-8859-2"));
-            for (int i = 0; i < dl_listy; i++)
+            StreamWriter sw = new StreamWriter(fullPath, true, Encoding.GetEncoding("ISO-8859-1"));
+            for (int w=0;w<checker.Length;w++) {
+               sw.Write(checker[w]);
+                if (w != checker.Length-1)
+                {
+                    sw.Write(';');
+                }
+            }
+            for (int i = 0; i < 199; i++)
             {
-                sw.WriteLine(DATA_ODCZYTU[i] + ';' + ZUZYCIE_BIEZACE[i] + ';' + JEDNOSTKA[i] + ';' + DATA_POPRZEDNIEGO_ODCZYTU[i] + ';' + ODCZYT_BIEZACY[i] + ';' + ODCZYT_POPRZEDNI[i] + ';' + STREFA_EC[i] + ';' + ADRES_PPE[i] + ';' + TYP_ODCZYTU[i] + ';' + NUMER_LICZNIKA[i] + ';' + PUNKT_POBORU[i] + ';' + SKLADNIK[i]);
+                if (magazyn[i, 0] == check)
+                {
 
+                }
+                else
+                {
+                    for (int j = 0; j < rozmiar + 1; j++)
+                    {
+                        sw.Write(magazyn[i, j]+';');
+                   
+                    }
+                    sw.Write('\n');
+                }
+
+               
             }
             sw.Close();
         }
 
         void cleaner()
         {
-            DATA_ODCZYTU.Clear();
-            ZUZYCIE_BIEZACE.Clear();
-            JEDNOSTKA.Clear();
-            DATA_POPRZEDNIEGO_ODCZYTU.Clear();
-            ODCZYT_BIEZACY.Clear();
-            ODCZYT_POPRZEDNI.Clear();
-            STREFA_EC.Clear();
-            ADRES_PPE.Clear();
-            TYP_ODCZYTU.Clear();
-            NUMER_LICZNIKA.Clear();
-            PUNKT_POBORU.Clear();
-            SKLADNIK.Clear();
+            Array.Clear(magazyn,0,magazyn.Length);
             czynnik = 0;
         }
         private void button1_Click(object sender, EventArgs e)
@@ -219,7 +190,7 @@ namespace WindowsFormsApp4
             OpenFileDialog1.Multiselect = true;
             OpenFileDialog1.Filter = "csv Files|*.csv";
             OpenFileDialog1.Title = "Seclect a csv File";
-            if (OpenFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 fullFileName = new List<String>(OpenFileDialog1.FileNames);
 
@@ -227,11 +198,11 @@ namespace WindowsFormsApp4
                 string title = "Wybór";
                 try
                 {
-                    odczyt();
-                    label1.Visible = true;
-                    textBox1.Visible = true;
-                    button3.Visible = true;
-                    button2.Visible = true;
+                odczyt();
+                label1.Visible = true;
+                textBox1.Visible = true;
+                button3.Visible = true;
+                button2.Visible = true;
                 }
                 catch (Exception)
                 {
@@ -288,20 +259,20 @@ namespace WindowsFormsApp4
             try
             {
 
-                if (listBox1.Items.Count == 0)
-                {
-                    MessageBox.Show(errormessage2, title);
-                }
-                else
-                {
-                    concat();
-                    MessageBox.Show(message, title);
-                    textBox1.Clear();
-                    label1.Visible = false;
-                    textBox1.Visible = false;
-                    button3.Visible = false;
-                    button2.Visible = false;
-                }
+            if (listBox1.Items.Count == 0)
+            {
+                MessageBox.Show(errormessage2, title);
+            }
+            else
+            {
+                concat();
+                MessageBox.Show(message, title);
+                textBox1.Clear();
+                label1.Visible = false;
+                textBox1.Visible = false;
+                button3.Visible = false;
+                button2.Visible = false;
+            }
 
             }
             catch (Exception)
@@ -431,6 +402,11 @@ namespace WindowsFormsApp4
             button5.Visible = false;
             button6.Visible = false;
             
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

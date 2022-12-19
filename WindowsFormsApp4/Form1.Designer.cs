@@ -46,6 +46,7 @@ namespace WindowsFormsApp4
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -57,14 +58,14 @@ namespace WindowsFormsApp4
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(25, 154);
+            this.listBox1.Location = new System.Drawing.Point(25, 245);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(320, 82);
             this.listBox1.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(373, 154);
+            this.button1.Location = new System.Drawing.Point(373, 245);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -74,7 +75,7 @@ namespace WindowsFormsApp4
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(373, 183);
+            this.button2.Location = new System.Drawing.Point(373, 274);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -85,7 +86,7 @@ namespace WindowsFormsApp4
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(373, 245);
+            this.button3.Location = new System.Drawing.Point(373, 336);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 20);
             this.button3.TabIndex = 3;
@@ -97,7 +98,7 @@ namespace WindowsFormsApp4
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 245);
+            this.label1.Location = new System.Drawing.Point(22, 336);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(141, 13);
             this.label1.TabIndex = 5;
@@ -107,7 +108,7 @@ namespace WindowsFormsApp4
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(169, 242);
+            this.textBox1.Location = new System.Drawing.Point(169, 333);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(176, 20);
             this.textBox1.TabIndex = 6;
@@ -117,7 +118,7 @@ namespace WindowsFormsApp4
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 138);
+            this.label2.Location = new System.Drawing.Point(22, 229);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(127, 13);
             this.label2.TabIndex = 7;
@@ -187,11 +188,21 @@ namespace WindowsFormsApp4
             this.button6.Visible = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(25, 156);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(320, 53);
+            this.textBox2.TabIndex = 14;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
             // Excelator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(477, 278);
+            this.ClientSize = new System.Drawing.Size(500, 375);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -231,6 +242,7 @@ namespace WindowsFormsApp4
         private Button button4;
         private Button button5;
         private Button button6;
+        private TextBox textBox2;
     }
 }
 
