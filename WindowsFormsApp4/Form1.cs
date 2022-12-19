@@ -29,6 +29,8 @@ namespace WindowsFormsApp4
         string check;
         string[] checker;
 
+        bool err = false;
+
         string[,] magazyn = new string[20000, 20000];
         public Excelator()
         {
@@ -87,10 +89,31 @@ namespace WindowsFormsApp4
             checker = textBox2.Text.Split('\t');
             check = checker[0];
             rozmiar = checker.Length;
-                                    
-            int c = 0;
 
+            
+            int c = 0;
+            
             foreach (string fileName in fullFileName)
+            {
+                err = false;
+                using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-1")))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(';');
+                        for (int k = 0; k < values.Length; k++)
+                        {
+                            if (values[k] == checker[0])
+                            { 
+                            err = true;
+                            }
+
+                        }
+                    }
+                }
+            }
+                    foreach (string fileName in fullFileName)
             {
                 int x = 0;
                 listBox1.Items.Add(fileName.Substring(fileName.LastIndexOf(@"\") + 1));
@@ -258,6 +281,10 @@ namespace WindowsFormsApp4
                 {
                     MessageBox.Show("Najpierw wklej nazwy kolumn", title);
                 }
+                else if (err == false)
+                {
+                    MessageBox.Show("Nazwy kolumn w wybranych plikach nie są takie same", title);
+                }
                 else
                 {
                     concat();
@@ -273,9 +300,9 @@ namespace WindowsFormsApp4
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Coś poszło nie tak", title);
+                MessageBox.Show(ex.Message, title);
             }
 
 
@@ -415,5 +442,22 @@ namespace WindowsFormsApp4
         {
 
         }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Skopiuj nazwy kolumn z excela, zaznacz wszystkie jednocześnie i wklej do pola obok, nie nie zmieniaj odstępów między nimi. Kliknij sprawdź aby zobaczyć czy nazwy kolumn zostały wczytane poprawnie.","Podpowiedź");
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            listBox3.Items.Clear();
+            checker = textBox2.Text.Split('\t');
+            check = checker[0];
+            for(int z = 0;z< checker.Length;z++)
+            {
+                listBox3.Items.Add(checker[z]);
+            }
+        }
+
+        
     }
 }
