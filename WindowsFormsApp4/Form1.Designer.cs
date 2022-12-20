@@ -56,6 +56,8 @@ namespace WindowsFormsApp4
             this.button8 = new System.Windows.Forms.Button();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.button9 = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -67,14 +69,14 @@ namespace WindowsFormsApp4
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(25, 374);
+            this.listBox1.Location = new System.Drawing.Point(25, 406);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(320, 82);
             this.listBox1.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(373, 374);
+            this.button1.Location = new System.Drawing.Point(373, 406);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -84,7 +86,7 @@ namespace WindowsFormsApp4
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(373, 403);
+            this.button2.Location = new System.Drawing.Point(373, 435);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -95,7 +97,7 @@ namespace WindowsFormsApp4
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(373, 465);
+            this.button3.Location = new System.Drawing.Point(373, 497);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 20);
             this.button3.TabIndex = 3;
@@ -107,7 +109,7 @@ namespace WindowsFormsApp4
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 465);
+            this.label1.Location = new System.Drawing.Point(22, 497);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(141, 13);
             this.label1.TabIndex = 5;
@@ -117,7 +119,7 @@ namespace WindowsFormsApp4
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(169, 462);
+            this.textBox1.Location = new System.Drawing.Point(169, 494);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(176, 20);
             this.textBox1.TabIndex = 6;
@@ -127,11 +129,11 @@ namespace WindowsFormsApp4
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 358);
+            this.label2.Location = new System.Drawing.Point(22, 390);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(217, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Krok 2. Wybierz pliki, które chcesz połączyć";
+            this.label2.Text = "Krok 3. Wybierz pliki, które chcesz połączyć";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
@@ -262,7 +264,7 @@ namespace WindowsFormsApp4
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(373, 245);
+            this.button8.Location = new System.Drawing.Point(373, 215);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(75, 23);
             this.button8.TabIndex = 21;
@@ -273,25 +275,49 @@ namespace WindowsFormsApp4
             // listBox3
             // 
             this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(25, 245);
+            this.listBox3.Location = new System.Drawing.Point(25, 268);
             this.listBox3.Name = "listBox3";
             this.listBox3.Size = new System.Drawing.Size(320, 82);
             this.listBox3.TabIndex = 22;
+            this.listBox3.SelectedIndexChanged += new System.EventHandler(this.listBox3_SelectedIndexChanged);
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(373, 215);
+            this.button9.Location = new System.Drawing.Point(373, 327);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
             this.button9.TabIndex = 23;
             this.button9.Text = "Wyczyść";
+            this.button9.Visible= false;
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(22, 252);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(232, 13);
+            this.label10.TabIndex = 24;
+            this.label10.Text = "Krok 2. Wygeneruj podgląd wklejonych kolumn.";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(54, 353);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(307, 13);
+            this.label11.TabIndex = 25;
+            this.label11.Text = "Kolumny w podglądzie powinny znajdować się jedna pod drugą.";
             // 
             // Excelator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 517);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.listBox3);
             this.Controls.Add(this.button8);
@@ -351,6 +377,8 @@ namespace WindowsFormsApp4
         private Button button8;
         private ListBox listBox3;
         private Button button9;
+        private Label label10;
+        private Label label11;
     }
 }
 

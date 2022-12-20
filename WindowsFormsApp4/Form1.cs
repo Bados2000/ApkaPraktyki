@@ -29,7 +29,9 @@ namespace WindowsFormsApp4
         string check;
         string[] checker;
 
-        bool err = false;
+        int wmax = 0;
+        int wjest = 0;
+
 
         string[,] magazyn = new string[20000, 20000];
         public Excelator()
@@ -85,17 +87,18 @@ namespace WindowsFormsApp4
 
 
         void odczyt()
-        {       
+        {
             checker = textBox2.Text.Split('\t');
             check = checker[0];
             rozmiar = checker.Length;
 
-            
+
             int c = 0;
-            
+
             foreach (string fileName in fullFileName)
             {
-                err = false;
+                wmax++;
+
                 using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-1")))
                 {
                     while (!reader.EndOfStream)
@@ -105,64 +108,89 @@ namespace WindowsFormsApp4
                         for (int k = 0; k < values.Length; k++)
                         {
                             if (values[k] == checker[0])
-                            { 
-                            err = true;
+                            {
+                                wjest++;
                             }
 
                         }
                     }
                 }
             }
-                    foreach (string fileName in fullFileName)
+            foreach (string fileName in fullFileName)
             {
                 int x = 0;
+                int pustka = 0;
                 listBox1.Items.Add(fileName.Substring(fileName.LastIndexOf(@"\") + 1));
                 bool warunek = false;
                 int starter = 0;
                 using (var reader = new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-1")))
                 {
-                    while (!reader.EndOfStream)
-                    {
 
-                        var line = reader.ReadLine();
-                        var values = line.Split(';');
-                                        
-                        while (warunek == false && x < values.Length)
-                        {
-                            if (values[x] == check)
+
+                    while (!reader.EndOfStream && pustka < 2)
+                    {
+                       
+                            pustka = 0;
+                            var line = reader.ReadLine();
+                            var values = line.Split(';');
+
+                            while (warunek == false && x < values.Length)
                             {
-                                warunek = true;
-                                starter = x;
+                                if (values[x] == check)
+                                {
+                                    warunek = true;
+                                    starter = x;
+                                }
+                                else
+                                {
+                                    x++;
+                                }
+                            }
+                            int start = 0;
+                            int begin = 0;
+                            if (warunek)
+                            {
+                                begin = starter;
+                                for (int j = 0; j < checker.Length; ++j)
+                                {
+                                    if (string.IsNullOrEmpty(values[begin]))
+                                    {
+                                        pustka++;
+                                        begin++;
+                                    }
+                                    else
+                                    {
+                                        begin++;
+                                    }
+                                }
+
+                                start = starter;
+                                if (pustka < 2)
+                                {
+                                    for (int j = 0; j < checker.Length; ++j)
+                                    {
+
+                                        magazyn[c, j] = values[start];
+                                        start++;
+                                    }
+                                }
                             }
                             else
                             {
-                                x++;
+                                x = 0;
                             }
-                        }
-                        int start = 0;
-                        if (warunek)
-                        {
-                            start = starter;
-                            for (int j = 0; j < checker.Length; ++j)
+
+                            if (warunek)
                             {
-                                
-                                magazyn[c, j] = values[start];
-                                start++;
+                                c++;
                             }
+
                         }
-                        else
-                        {
-                            x = 0;
-                        }
-                        if (warunek)
-                        {
-                            c++;
-                        }
-                    }
                         warunek = false;
+                    }
                 }
             }
-        }
+        
         void concat()
         {
 
@@ -269,7 +297,7 @@ namespace WindowsFormsApp4
         private void button3_Click(object sender, EventArgs e)
         {      
             string title = "Połączenie";
-   
+
             try
             {
 
@@ -281,9 +309,17 @@ namespace WindowsFormsApp4
                 {
                     MessageBox.Show("Najpierw wklej nazwy kolumn", title);
                 }
-                else if (err == false)
+                else if (wjest != wmax)
                 {
                     MessageBox.Show("Nazwy kolumn w wybranych plikach nie są takie same", title);
+                    wmax = 0;
+                    wjest = 0;
+                    textBox1.Clear();
+                    listBox1.Items.Clear();
+                    label1.Visible = false;
+                    textBox1.Visible = false;
+                    button3.Visible = false;
+                    button2.Visible = false;
                 }
                 else
                 {
@@ -296,7 +332,11 @@ namespace WindowsFormsApp4
                     textBox1.Clear();
                     textBox2.Clear();
                     listBox1.Items.Clear();
+                    listBox3.Items.Clear();
                     cleaner();
+                    wmax = 0;
+                    wjest = 0;
+
                 }
 
             }
@@ -306,7 +346,7 @@ namespace WindowsFormsApp4
             }
 
 
-           
+
         }
 
 
@@ -449,15 +489,38 @@ namespace WindowsFormsApp4
 
         private void button8_Click(object sender, EventArgs e)
         {
-            listBox3.Items.Clear();
-            checker = textBox2.Text.Split('\t');
-            check = checker[0];
-            for(int z = 0;z< checker.Length;z++)
+            if (string.IsNullOrEmpty(textBox2.Text))
             {
-                listBox3.Items.Add(checker[z]);
+                MessageBox.Show("Najpierw wprowadź zawartość");
+            }
+            else
+            {
+                listBox3.Items.Clear();
+                checker = textBox2.Text.Split('\t');
+                check = checker[0];
+                for (int z = 0; z < checker.Length; z++)
+                {
+                    listBox3.Items.Add(checker[z]);
+                }
+                button9.Visible = true;
             }
         }
+        private void label10_Click(object sender, EventArgs e)
+        {
 
-        
+        }
+        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void button9_Click(object sender, EventArgs e)
+        {
+            listBox3.Items.Clear();
+            textBox2.Clear();
+            button9.Visible=false;
+        }
+
+
+
     }
 }

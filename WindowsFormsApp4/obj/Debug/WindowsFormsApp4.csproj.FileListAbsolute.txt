@@ -76,3 +76,31 @@ C:\Users\admin\Desktop\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Numerics.V
 C:\Users\admin\Desktop\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\admin\Desktop\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Text.Encoding.CodePages.xml
 C:\Users\admin\Desktop\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.CopyComplete
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.AssemblyReference.cache
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.SuggestedBindingRedirects.cache
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.Excelator.resources
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.Properties.Resources.resources
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.GenerateResource.cache
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.CoreCompileInputs.cache
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.exe
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.pdb
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\WindowsFormsApp4.exe.config
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\WindowsFormsApp4.exe
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\WindowsFormsApp4.pdb
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.DataSet.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Buffers.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Memory.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Text.Encoding.CodePages.dll
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.pdb
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.DataSet.pdb
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\ExcelDataReader.DataSet.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Buffers.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Memory.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\bin\Debug\System.Text.Encoding.CodePages.xml
+C:\Users\admin\Desktop\Nowy folder\ApkaPraktyki\WindowsFormsApp4\obj\Debug\WindowsFormsApp4.csproj.CopyComplete
